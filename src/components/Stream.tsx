@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useSocketContext } from "../context/Socket";
 
 const Stream = () => {
   const videoStreamRef = useRef<HTMLVideoElement | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [doesShowVideo, setDoesShowVideo] = useState(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
+  const socket = useSocketContext();
 
   // to get the stream
   useEffect(() => {
@@ -19,6 +21,7 @@ const Stream = () => {
         setStream(newStream);
         if (videoStreamRef.current) {
           videoStreamRef.current.srcObject = newStream;
+          socket?.emit("sendNewStream", { newStream });
         }
       } catch (error) {
         toast.error("Oops! failed to load the stream");
@@ -53,7 +56,7 @@ const Stream = () => {
           ref={videoStreamRef}
           autoPlay
           muted={isMuted}
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full rounded-2xl"
         />
       ) : (
         <div className="flex items-center justify-center w-full h-full">

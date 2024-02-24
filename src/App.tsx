@@ -16,6 +16,11 @@ const App = () => {
     console.log(data);
   };
 
+  // function to handle create new room button
+  const handleCreateRoom = () => {
+    console.log("Creating the room");
+  };
+
   return (
     <div className="flex items-center justify-center w-screen h-screen">
       {/* form container */}
@@ -32,10 +37,10 @@ const App = () => {
           <input
             autoFocus
             placeholder="Enter the room id"
-            className={`w-full px-2 py-1 border-2 rounded-md  ${
+            className={`w-full p-2 border-2 rounded-md  ${
               errors?.roomId
                 ? "focus-within:outline-red-500"
-                : "focus-within:outline-blue-500"
+                : "focus-within:outline-blue-600"
             }`}
             {...register("roomId", {
               required: { value: true, message: "Please enter the room id" },
@@ -71,6 +76,7 @@ const App = () => {
           disabled={isSubmitting}
           type="button"
           className="py-2 font-medium text-blue-500 transition-all duration-300 ease-in-out border-2 border-blue-600 rounded-md hover:text-white hover:bg-blue-600"
+          onClick={handleCreateRoom}
         >
           Create a room
         </button>

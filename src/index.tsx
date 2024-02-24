@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import SocketContextProvider from "./context/Socket";
 import { Toaster } from "react-hot-toast";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router/routes";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,7 +15,7 @@ root.render(
   <React.StrictMode>
     <SocketContextProvider>
       <Toaster />
-      <App />
+      <RouterProvider router={router} />
     </SocketContextProvider>
   </React.StrictMode>
 );

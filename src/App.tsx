@@ -1,15 +1,21 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+import usePeer from "./hooks/usePeer";
+import { useEffect } from "react";
 
 interface IFormInput {
   roomId: string;
 }
 
 const App = () => {
+  const { currentPeerID } = usePeer();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<IFormInput>({ defaultValues: { roomId: "" } });
+  const navigate = useNavigate();
 
   // function to handle form submission
   const handleFormSubmission: SubmitHandler<IFormInput> = (data) => {
@@ -19,7 +25,13 @@ const App = () => {
   // function to handle create new room button
   const handleCreateRoom = () => {
     console.log("Creating the room");
+    const newRoomId = uuidv4();
+    navigate(`/${newRoomId}`);
   };
+
+  useEffect(() => {
+    console.log(currentPeerID);
+  }, [currentPeerID]);
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">

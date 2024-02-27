@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const useMediaStream = () => {
   const isMediaStream = useRef(false);
 
   // getting the media stream
-  useEffect(() => {
+  useMemo(() => {
     if (isMediaStream.current) return;
     try {
       (async () => {

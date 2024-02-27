@@ -5,9 +5,8 @@ const Player = ({ stream }: { stream: MediaStream }) => {
   useMemo(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
-      console.log("setting");
     }
-  }, [stream]);
+  }, [stream, videoRef.current]);
 
   return (
     <div className="border-2 border-red-500 w-96">

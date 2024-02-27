@@ -9,7 +9,6 @@ interface IFormInput {
 }
 
 const App = () => {
-  const { currentPeerID } = usePeer();
   const {
     register,
     handleSubmit,
@@ -20,6 +19,7 @@ const App = () => {
   // function to handle form submission
   const handleFormSubmission: SubmitHandler<IFormInput> = (data) => {
     console.log(data);
+    navigate(`/${data?.roomId}`);
   };
 
   // function to handle create new room button
@@ -28,10 +28,6 @@ const App = () => {
     const newRoomId = uuidv4();
     navigate(`/${newRoomId}`);
   };
-
-  useEffect(() => {
-    console.log(currentPeerID);
-  }, [currentPeerID]);
 
   return (
     <div className="flex items-center justify-center w-screen h-screen">

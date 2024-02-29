@@ -1,5 +1,5 @@
 import Peer from "peerjs";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSocketContext } from "../context/Socket";
 
@@ -11,7 +11,7 @@ const usePeer = () => {
   const isPeer = useRef(false);
 
   // creating the peer
-  useMemo(() => {
+  useEffect(() => {
     if (isPeer.current || !socket || !currentRoomID) return;
 
     const myPeer = new Peer();

@@ -1,16 +1,9 @@
-import { useMemo, useRef } from "react";
+import ReactPlayer from "react-player";
 
 const Player = ({ stream }: { stream: MediaStream }) => {
-  const videoRef = useRef<null | HTMLVideoElement>(null);
-  useMemo(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-    }
-  }, [stream, videoRef.current]);
-
   return (
-    <div className="border-2 border-red-500 w-96">
-      <video ref={videoRef} muted autoPlay className="object-cover" />
+    <div className="border-2 border-red-500">
+      <ReactPlayer url={stream} muted playing stopOnUnmount />
     </div>
   );
 };

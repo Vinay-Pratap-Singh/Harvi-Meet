@@ -4,6 +4,9 @@ import useMediaStream from "../hooks/useMediaStream";
 import { useSocketContext } from "../context/Socket";
 import usePeer from "../hooks/usePeer";
 import EmojiPicker from "../components/EmojiPicker";
+import Audio from "../components/Audio";
+import Video from "../components/Video";
+import EndCall from "../components/EndCall";
 
 const Meet = () => {
   const { mediaStream } = useMediaStream();
@@ -69,7 +72,7 @@ const Meet = () => {
 
   return (
     <div className="flex flex-col h-screen gap-5">
-      <div className="flex flex-wrap h-full gap-5 bg-green-500">
+      <div className="flex flex-wrap h-full gap-5">
         {Object.keys(allStreams).length > 0 &&
           Object.values(allStreams).map((streamData: any, index) => {
             return <Player key={index} stream={streamData?.stream} />;
@@ -77,11 +80,11 @@ const Meet = () => {
       </div>
 
       {/* adding the control buttons */}
-      <div className="relative flex items-center justify-center w-full h-20 gap-10 bg-gray-200">
+      <div className="relative flex items-center justify-center w-full gap-10 h-28 bg-gray-50">
         <EmojiPicker />
-        <button>Mute / Unmute</button>
-        <button>Show / Hide Video</button>
-        <button>ok</button>
+        <Audio />
+        <Video />
+        <EndCall />
       </div>
     </div>
   );

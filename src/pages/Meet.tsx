@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import Player from "../components/Player";
 import useMediaStream from "../hooks/useMediaStream";
 import { useSocketContext } from "../context/Socket";
 import usePeer from "../hooks/usePeer";
@@ -7,6 +6,7 @@ import EmojiPicker from "../components/EmojiPicker";
 import Audio from "../components/Audio";
 import Video from "../components/Video";
 import EndCall from "../components/EndCall";
+import ReactPlayer from "react-player";
 
 const Meet = () => {
   const { mediaStream } = useMediaStream();
@@ -71,11 +71,28 @@ const Meet = () => {
   }, [mediaStream, peer]);
 
   return (
-    <div className="flex flex-col h-screen gap-5">
-      <div className="flex flex-wrap h-full gap-5">
+    <div className="flex flex-col h-screen gap-5 overflow-hidden">
+      <div
+        className="grid h-full gap-5 overflow-hidden"
+        style={{
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+        }}
+      >
         {Object.keys(allStreams).length > 0 &&
           Object.values(allStreams).map((streamData: any, index) => {
-            return <Player key={index} stream={streamData?.stream} />;
+            return (
+              <div
+                className="object-cover w-full h-full border-2 border-red-500"
+                key={index}
+              >
+                <ReactPlayer
+                  url={streamData?.stream}
+                  muted
+                  playing
+                  stopOnUnmount
+                />
+              </div>
+            );
           })}
       </div>
 

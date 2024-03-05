@@ -7,14 +7,18 @@ const Video = () => {
     <button
       title="Show / hide video"
       onClick={() => setShowVideo(!showVideo)}
-      className="relative flex items-center justify-center transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md h-14 w-14"
+      className="relative flex items-center justify-center w-12 h-12 transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md"
     >
       {showVideo ? (
-        <img className="w-7 h-7" src="/assets/showVideo.svg" alt="show video" />
+        <img
+          className="w-6 h-6"
+          src="/assets/footer/showVideo.svg"
+          alt="show video"
+        />
       ) : (
         <img
-          className="w-7 h-7"
-          src="/assets/hiddenVideo.svg"
+          className="w-6 h-6"
+          src="/assets/footer/hiddenVideo.svg"
           alt="hide video"
         />
       )}

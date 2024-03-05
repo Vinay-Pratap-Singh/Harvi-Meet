@@ -50,7 +50,7 @@ const EmojiPicker = () => {
   return (
     <div
       title="Choose emoji"
-      className="relative flex items-center justify-center transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md h-14 w-14"
+      className="relative flex items-center justify-center w-12 h-12 transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md"
     >
       {showEmoji && (
         <EmojiPickerBox
@@ -79,8 +79,8 @@ const EmojiPicker = () => {
 
       <img
         onClick={() => setShowEmoji(!showEmoji)}
-        className="cursor-pointer w-7 h-7"
-        src="/assets/emoji.svg"
+        className="w-6 h-6 cursor-pointer"
+        src="/assets/footer/emoji.svg"
         alt="emoji"
       />
     </div>

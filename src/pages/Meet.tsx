@@ -2,11 +2,8 @@ import { useMemo, useState } from "react";
 import useMediaStream from "../hooks/useMediaStream";
 import { useSocketContext } from "../context/Socket";
 import usePeer from "../hooks/usePeer";
-import EmojiPicker from "../components/EmojiPicker";
-import Audio from "../components/Audio";
-import Video from "../components/Video";
-import EndCall from "../components/EndCall";
 import ReactPlayer from "react-player";
+import Footer from "../components/Footer";
 
 const Meet = () => {
   const { mediaStream } = useMediaStream();
@@ -71,7 +68,8 @@ const Meet = () => {
   }, [mediaStream, peer]);
 
   return (
-    <div className="flex flex-col h-screen gap-5 overflow-hidden">
+    <div className="relative flex flex-col h-screen gap-5 overflow-hidden">
+      {/* for all the joined users video */}
       <div
         className="grid h-full gap-5 overflow-hidden"
         style={{
@@ -81,28 +79,19 @@ const Meet = () => {
         {Object.keys(allStreams).length > 0 &&
           Object.values(allStreams).map((streamData: any, index) => {
             return (
-              <div
-                className="object-cover w-full h-full border-2 border-red-500"
+              <ReactPlayer
                 key={index}
-              >
-                <ReactPlayer
-                  url={streamData?.stream}
-                  muted
-                  playing
-                  stopOnUnmount
-                />
-              </div>
+                url={streamData?.stream}
+                muted
+                playing
+                stopOnUnmount
+              />
             );
           })}
       </div>
 
-      {/* adding the control buttons */}
-      <div className="relative flex items-center justify-center w-full gap-10 h-28 bg-gray-50">
-        <EmojiPicker />
-        <Audio />
-        <Video />
-        <EndCall />
-      </div>
+      {/* for button controls */}
+      <Footer />
     </div>
   );
 };

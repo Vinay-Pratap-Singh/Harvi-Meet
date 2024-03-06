@@ -7,6 +7,7 @@ import SocketContextProvider from "./context/Socket";
 import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/routes";
+import StreamContextProvider from "./context/Stream";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -14,8 +15,10 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <SocketContextProvider>
-      <Toaster />
-      <RouterProvider router={router} />
+      <StreamContextProvider>
+        <Toaster />
+        <RouterProvider router={router} />
+      </StreamContextProvider>
     </SocketContextProvider>
   </React.StrictMode>
 );

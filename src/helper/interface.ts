@@ -8,3 +8,11 @@ export interface IEmojiData {
   horizontalMove: number;
   animationTime: number;
 }
+
+// interface for stream data
+export interface IStreamData {
+  callerID: string;
+  stream: MediaStream;
+  isMuted: boolean;
+  isPlaying: boolean;
+}

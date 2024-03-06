@@ -1,31 +1,36 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import useMediaStream from "../hooks/useMediaStream";
 import { useSocketContext } from "../context/Socket";
 import usePeer from "../hooks/usePeer";
 import ReactPlayer from "react-player";
 import Footer from "../components/Footer";
+import { useStreamContext } from "../context/Stream";
 
 const Meet = () => {
   const { mediaStream } = useMediaStream();
   const socket = useSocketContext();
   const { peer, currentPeerID } = usePeer();
-  const [allStreams, setAllStreams] = useState({});
+  const { allStreams, setAllStreams } = useStreamContext();
 
   // for setting the first user to all streams
   useMemo(() => {
     if (!mediaStream || !peer || !currentPeerID) return;
+
     setAllStreams((prev) => {
       return {
         ...prev,
-        [currentPeerID]: {
+        currentPeerID: {
+          callerID: currentPeerID,
+          isMuted: true,
+          isPlaying: true,
           stream: mediaStream,
         },
       };
     });
-  }, [mediaStream, currentPeerID, peer]);
+  }, [mediaStream, peer, currentPeerID, setAllStreams]);
 
   // for listening to new user
-  useMemo(() => {
+  useEffect(() => {
     if (!socket || !mediaStream || !peer) return;
     const handleJoinedRoom = (newUserPeerID: string) => {
       if (!peer || !mediaStream) return;
@@ -34,7 +39,10 @@ const Meet = () => {
         setAllStreams((prev) => {
           return {
             ...prev,
-            [newUserPeerID]: {
+            newUserPeerID: {
+              callerID: newUserPeerID,
+              isMuted: true,
+              isPlaying: true,
               stream: incomingStream,
             },
           };
@@ -46,7 +54,7 @@ const Meet = () => {
     return () => {
       socket.off("joined-room", handleJoinedRoom);
     };
-  }, [socket, mediaStream, peer]);
+  }, [socket, mediaStream, peer, setAllStreams]);
 
   // for answering the coming call
   useMemo(() => {
@@ -58,14 +66,17 @@ const Meet = () => {
         setAllStreams((prev) => {
           return {
             ...prev,
-            [callerID]: {
+            callerID: {
+              callerID: callerID,
+              isMuted: true,
+              isPlaying: true,
               stream: incomingStream,
             },
           };
         });
       });
     });
-  }, [mediaStream, peer]);
+  }, [mediaStream, peer, setAllStreams]);
 
   return (
     <div className="relative flex flex-col h-screen gap-5 overflow-hidden">
@@ -76,14 +87,14 @@ const Meet = () => {
           gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
         }}
       >
-        {Object.keys(allStreams).length > 0 &&
-          Object.values(allStreams).map((streamData: any, index) => {
+        {Object.values(allStreams).length > 0 &&
+          Object.values(allStreams).map((streamData) => {
             return (
               <ReactPlayer
-                key={index}
+                key={streamData?.callerID}
                 url={streamData?.stream}
-                muted
-                playing
+                muted={streamData?.isMuted}
+                playing={streamData?.isPlaying}
                 stopOnUnmount
               />
             );

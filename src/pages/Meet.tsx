@@ -19,7 +19,7 @@ const Meet = () => {
     setAllStreams((prev) => {
       return {
         ...prev,
-        currentPeerID: {
+        [currentPeerID]: {
           callerID: currentPeerID,
           isMuted: true,
           isPlaying: true,
@@ -27,6 +27,7 @@ const Meet = () => {
         },
       };
     });
+    console.log("setting first time");
   }, [mediaStream, peer, currentPeerID, setAllStreams]);
 
   // for listening to new user
@@ -48,6 +49,7 @@ const Meet = () => {
           };
         });
       });
+      console.log("room join hua hai");
     };
     socket.on("joined-room", handleJoinedRoom);
 
@@ -74,6 +76,7 @@ const Meet = () => {
             },
           };
         });
+        console.log("answer ho gya hai");
       });
     });
   }, [mediaStream, peer, setAllStreams]);

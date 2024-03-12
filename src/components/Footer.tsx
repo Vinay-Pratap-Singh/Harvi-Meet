@@ -7,9 +7,19 @@ import CopyRoomCode from "./CopyRoomCode";
 
 interface IProps {
   currentPeerID: string;
+  showSidebar: {
+    showUsers: boolean;
+    showMessages: boolean;
+  };
+  setShowSidebar: React.Dispatch<
+    React.SetStateAction<{
+      showUsers: boolean;
+      showMessages: boolean;
+    }>
+  >;
 }
 
-const Footer = ({ currentPeerID }: IProps) => {
+const Footer = ({ currentPeerID, setShowSidebar, showSidebar }: IProps) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDetailsBoxClosed, setIsDetailsBoxClosed] = useState(false);
 
@@ -21,6 +31,28 @@ const Footer = ({ currentPeerID }: IProps) => {
     const formattedHours = hours % 12 || 12;
     const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
+  };
+
+  // function to handle sidebar buttons click (user / messages)
+  const handleSidebarClicks = (option: string) => {
+    switch (option) {
+      case "users": {
+        if (showSidebar?.showUsers) {
+          setShowSidebar({ showMessages: false, showUsers: false });
+          break;
+        }
+        setShowSidebar({ showMessages: false, showUsers: true });
+        break;
+      }
+      case "messages": {
+        if (showSidebar?.showMessages) {
+          setShowSidebar({ showMessages: false, showUsers: false });
+          break;
+        }
+        setShowSidebar({ showMessages: true, showUsers: false });
+        break;
+      }
+    }
   };
 
   // for displaying the current time
@@ -57,9 +89,13 @@ const Footer = ({ currentPeerID }: IProps) => {
             className="w-6 h-6"
           />
         </button>
+
+        {/* for toggling user details */}
         <button
+          type="button"
           title="Get joined users detail"
           className="relative flex items-center justify-center w-12 h-12 transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md"
+          onClick={() => handleSidebarClicks("users")}
         >
           <img
             src="/assets/footer/users.svg"
@@ -67,9 +103,13 @@ const Footer = ({ currentPeerID }: IProps) => {
             className="w-6 h-6"
           />
         </button>
+
+        {/* for toggling user's messages */}
         <button
+          type="button"
           title="Message everyone"
           className="relative flex items-center justify-center w-12 h-12 transition-all duration-200 ease-in-out bg-gray-200 rounded-full hover:shadow-md"
+          onClick={() => handleSidebarClicks("messages")}
         >
           <img
             src="/assets/footer/message.svg"

@@ -20,7 +20,11 @@ const usePeer = () => {
     myPeer.on("open", (id: string) => {
       setCurrentPeerID(id);
       // joining the room
-      socket?.emit("join-room", { currentRoomID, peerID: id });
+      socket?.emit("joinRoom", {
+        currentRoomID,
+        peerID: id,
+        name: localStorage.getItem("name") || "",
+      });
     });
 
     return () => {

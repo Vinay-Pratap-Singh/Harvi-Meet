@@ -12,6 +12,8 @@ export interface IEmojiData {
 // interface for stream data
 export interface IStreamData {
   peerID: string;
+  name: string;
+  // isOrganizer: boolean;
   stream: MediaStream;
   isMuted: boolean;
   isPlaying: boolean;

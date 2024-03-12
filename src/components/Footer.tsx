@@ -5,10 +5,15 @@ import EndCall from "./EndCall";
 import Video from "./Video";
 import CopyRoomCode from "./CopyRoomCode";
 
-const Footer = () => {
+interface IProps {
+  currentPeerID: string;
+}
+
+const Footer = ({ currentPeerID }: IProps) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDetailsBoxClosed, setIsDetailsBoxClosed] = useState(false);
 
+  // function to format the time
   const formatTime = (time: any) => {
     const hours = time.getHours();
     const minutes = time.getMinutes();
@@ -18,6 +23,7 @@ const Footer = () => {
     return `${formattedHours}:${formattedMinutes} ${ampm}`;
   };
 
+  // for displaying the current time
   useEffect(() => {
     const intervalId = setInterval(() => {
       setCurrentTime(new Date());
@@ -33,7 +39,7 @@ const Footer = () => {
       {/* for video control button */}
       <div className="relative flex items-center justify-center gap-10">
         <EmojiPicker />
-        <Audio />
+        <Audio currentPeerID={currentPeerID} />
         <Video />
         <EndCall />
       </div>

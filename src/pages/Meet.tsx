@@ -20,14 +20,13 @@ const Meet = () => {
       return {
         ...prev,
         [currentPeerID]: {
-          callerID: currentPeerID,
+          peerID: currentPeerID,
           isMuted: true,
           isPlaying: true,
           stream: mediaStream,
         },
       };
     });
-    console.log("setting first time");
   }, [mediaStream, peer, currentPeerID, setAllStreams]);
 
   // for listening to new user
@@ -40,8 +39,8 @@ const Meet = () => {
         setAllStreams((prev) => {
           return {
             ...prev,
-            newUserPeerID: {
-              callerID: newUserPeerID,
+            [newUserPeerID]: {
+              peerID: newUserPeerID,
               isMuted: true,
               isPlaying: true,
               stream: incomingStream,
@@ -49,7 +48,6 @@ const Meet = () => {
           };
         });
       });
-      console.log("room join hua hai");
     };
     socket.on("joined-room", handleJoinedRoom);
 
@@ -68,15 +66,14 @@ const Meet = () => {
         setAllStreams((prev) => {
           return {
             ...prev,
-            callerID: {
-              callerID: callerID,
+            [callerID]: {
+              peerID: callerID,
               isMuted: true,
               isPlaying: true,
               stream: incomingStream,
             },
           };
         });
-        console.log("answer ho gya hai");
       });
     });
   }, [mediaStream, peer, setAllStreams]);
@@ -93,19 +90,38 @@ const Meet = () => {
         {Object.values(allStreams).length > 0 &&
           Object.values(allStreams).map((streamData) => {
             return (
-              <ReactPlayer
-                key={streamData?.callerID}
-                url={streamData?.stream}
-                muted={streamData?.isMuted}
-                playing={streamData?.isPlaying}
-                stopOnUnmount
-              />
+              <div className="relative w-fit h-fit bg-red-50">
+                <ReactPlayer
+                  key={streamData?.peerID}
+                  url={streamData?.stream}
+                  muted={streamData?.isMuted}
+                  playing={streamData?.isPlaying}
+                  stopOnUnmount
+                />
+
+                {/* to show mic option */}
+                <div className="absolute left-5 top-5 flex items-center justify-center w-8 h-8 transition-all duration-200 ease-in-out bg-gray-200 rounded-full">
+                  {!streamData.isMuted ? (
+                    <img
+                      className="w-4 h-4 "
+                      src="/assets/footer/mute.svg"
+                      alt="mute"
+                    />
+                  ) : (
+                    <img
+                      className="w-4 h-4 "
+                      src="/assets/footer/unmute.svg"
+                      alt="unmute"
+                    />
+                  )}
+                </div>
+              </div>
             );
           })}
       </div>
 
       {/* for button controls */}
-      <Footer />
+      <Footer currentPeerID={currentPeerID} />
     </div>
   );
 };

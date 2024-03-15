@@ -7,6 +7,9 @@ import Footer from "../components/Footer";
 import { useStreamContext } from "../context/Stream";
 import Messages from "../components/sidebar/Messages";
 import Users from "../components/sidebar/Users";
+import { useParams } from "react-router-dom";
+import { useUserContext } from "../context/User";
+import { IRoomData } from "../helper/interface";
 
 const Meet = () => {
   const { mediaStream } = useMediaStream();
@@ -17,32 +20,50 @@ const Meet = () => {
     showUsers: false,
     showMessages: false,
   });
+  const { roomid } = useParams();
+  const { userData } = useUserContext();
+  const { setAllUsersData } = useUserContext();
 
   // for setting the first user to all streams
   useMemo(() => {
-    if (!mediaStream || !peer || !currentPeerID) return;
+    if (!mediaStream || !peer || !currentPeerID || !socket) return;
+
+    // sending the user data to server
+    socket?.emit("addUserData", {
+      peerID: currentPeerID,
+      roomID: roomid,
+      isMeetingOrganiser: userData?.isMeetingOrganiser,
+      name: userData?.name,
+    });
 
     setAllStreams((prev) => {
       return {
         ...prev,
         [currentPeerID]: {
           peerID: currentPeerID,
-          name: localStorage.getItem("name") || "",
           isMuted: true,
           isPlaying: true,
           stream: mediaStream,
         },
       };
     });
-  }, [mediaStream, peer, currentPeerID, setAllStreams]);
+  }, [
+    mediaStream,
+    peer,
+    currentPeerID,
+    setAllStreams,
+    roomid,
+    socket,
+    userData,
+  ]);
 
   // for listening to new user
   useEffect(() => {
     if (!socket || !mediaStream || !peer) return;
 
+    // function to check new joined user
     const handleJoinedRoom = ({
       peerID: newUserPeerID,
-      name,
     }: {
       peerID: string;
       name: string;
@@ -55,7 +76,6 @@ const Meet = () => {
             ...prev,
             [newUserPeerID]: {
               peerID: newUserPeerID,
-              name,
               isOrganizer: true,
               isMuted: true,
               isPlaying: true,
@@ -65,12 +85,19 @@ const Meet = () => {
         });
       });
     };
+
+    const handleUserData = (data: IRoomData) => {
+      setAllUsersData(data);
+    };
+
     socket.on("joinedRoom", handleJoinedRoom);
+    socket.on("allUsersData", handleUserData);
 
     return () => {
       socket.off("joinedRoom", handleJoinedRoom);
+      socket.off("allUsersData", handleUserData);
     };
-  }, [socket, mediaStream, peer, setAllStreams]);
+  }, [socket, mediaStream, peer, setAllStreams, setAllUsersData]);
 
   // for answering the coming call
   useMemo(() => {
@@ -84,7 +111,6 @@ const Meet = () => {
             ...prev,
             [callerID]: {
               peerID: callerID,
-              name: localStorage.getItem("name") || "",
               isMuted: true,
               isPlaying: true,
               stream: incomingStream,
@@ -97,9 +123,15 @@ const Meet = () => {
 
   return (
     <div className="relative flex flex-col gap-5 h-screen">
-      <div className="flex items-center justify-center gap-5 h-full">
+      <div
+        className={`flex items-center gap-5 h-full m-5 ${
+          showSidebar?.showMessages || showSidebar?.showUsers
+            ? "justify-between"
+            : "justify-center"
+        }`}
+      >
         {/* for all the joined users video */}
-        <div className="h-full flex flex-wrap items-center justify-center gap-5 p-5 overflow-hidden">
+        <div className="h-full flex flex-wrap items-center justify-center gap-5 overflow-hidden">
           {Object.values(allStreams).length > 0 &&
             Object.values(allStreams).map((streamData) => {
               return (
@@ -144,7 +176,7 @@ const Meet = () => {
           className={`${
             showSidebar?.showMessages === true ||
             showSidebar?.showUsers === true
-              ? "w-96"
+              ? "w-96 h-full"
               : "hidden"
           }`}
         >

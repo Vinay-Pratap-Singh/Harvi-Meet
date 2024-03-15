@@ -1,25 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import SocketContextProvider from "./context/Socket";
 import { Toaster } from "react-hot-toast";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/routes";
 import StreamContextProvider from "./context/Stream";
+import { UserContextProvider } from "./context/User";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <SocketContextProvider>
-      <StreamContextProvider>
-        <Toaster />
-        <RouterProvider router={router} />
-      </StreamContextProvider>
-    </SocketContextProvider>
+    <UserContextProvider>
+      <SocketContextProvider>
+        <StreamContextProvider>
+          <Toaster />
+          <RouterProvider router={router} />
+        </StreamContextProvider>
+      </SocketContextProvider>
+    </UserContextProvider>
   </React.StrictMode>
 );
 

@@ -23,7 +23,6 @@ const usePeer = () => {
       socket?.emit("joinRoom", {
         currentRoomID,
         peerID: id,
-        name: localStorage.getItem("name") || "",
       });
     });
 

@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { useUserContext } from "../../context/User";
 
 interface IFormInput {
   name: string;
@@ -13,10 +14,11 @@ const CreateRoom = () => {
     formState: { errors, isSubmitting },
   } = useForm<IFormInput>({ defaultValues: { name: "" } });
   const navigate = useNavigate();
+  const { setUserData } = useUserContext();
 
   // function to handle form submission
   const handleFormSubmission: SubmitHandler<IFormInput> = (data) => {
-    localStorage.setItem("name", data?.name || "");
+    setUserData({ isMeetingOrganiser: true, name: data?.name });
     const newRoomId = uuidv4();
     navigate(`/${newRoomId}`);
   };

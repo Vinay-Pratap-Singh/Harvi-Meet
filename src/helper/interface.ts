@@ -21,6 +21,8 @@ export interface IStreamData {
 export interface IUserData {
   name: string;
   isMeetingOrganiser: boolean;
+  peerID: string;
+  roomID: string;
 }
 
 // for all joined user data
@@ -38,10 +40,17 @@ export interface IJoinedUsersData {
   [roomID: string]: IRoomData;
 }
 
+export interface IMessage {
+  message: string;
+  senderName: string;
+}
+
 // for user data context
 export interface IUserContextData {
   userData: IUserData;
   allUsersData: IRoomData;
+  allMessages: IMessage[];
+  setAllMessages: React.Dispatch<React.SetStateAction<IMessage[]>>;
   setUserData: React.Dispatch<React.SetStateAction<IUserData>>;
   setAllUsersData: React.Dispatch<React.SetStateAction<IRoomData>>;
 }

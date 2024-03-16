@@ -21,8 +21,9 @@ const Meet = () => {
     showMessages: false,
   });
   const { roomid } = useParams();
-  const { userData } = useUserContext();
   const { setAllUsersData } = useUserContext();
+  const { setUserData, userData, allMessages, setAllMessages } =
+    useUserContext();
 
   // for setting the first user to all streams
   useMemo(() => {
@@ -36,6 +37,7 @@ const Meet = () => {
       name: userData?.name,
     });
 
+    // adding the current stream
     setAllStreams((prev) => {
       return {
         ...prev,
@@ -47,6 +49,9 @@ const Meet = () => {
         },
       };
     });
+
+    // updating the user data
+    setUserData({ ...userData, peerID: currentPeerID, roomID: roomid || "" });
   }, [
     mediaStream,
     peer,
@@ -55,6 +60,7 @@ const Meet = () => {
     roomid,
     socket,
     userData,
+    setUserData,
   ]);
 
   // for listening to new user
@@ -90,14 +96,34 @@ const Meet = () => {
       setAllUsersData(data);
     };
 
+    const handleMessage = ({
+      senderName,
+      message,
+    }: {
+      senderName: string;
+      message: string;
+    }) => {
+      setAllMessages([...allMessages, { senderName, message }]);
+    };
+
     socket.on("joinedRoom", handleJoinedRoom);
     socket.on("allUsersData", handleUserData);
+    socket.on("receiveMessage", handleMessage);
 
     return () => {
       socket.off("joinedRoom", handleJoinedRoom);
       socket.off("allUsersData", handleUserData);
+      socket.off("receiveMessage", handleMessage);
     };
-  }, [socket, mediaStream, peer, setAllStreams, setAllUsersData]);
+  }, [
+    socket,
+    mediaStream,
+    peer,
+    setAllStreams,
+    setAllUsersData,
+    allMessages,
+    setAllMessages,
+  ]);
 
   // for answering the coming call
   useMemo(() => {

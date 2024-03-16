@@ -14,11 +14,11 @@ const CreateRoom = () => {
     formState: { errors, isSubmitting },
   } = useForm<IFormInput>({ defaultValues: { name: "" } });
   const navigate = useNavigate();
-  const { setUserData } = useUserContext();
+  const { setUserData, userData } = useUserContext();
 
   // function to handle form submission
   const handleFormSubmission: SubmitHandler<IFormInput> = (data) => {
-    setUserData({ isMeetingOrganiser: true, name: data?.name });
+    setUserData({ ...userData, isMeetingOrganiser: true, name: data?.name });
     const newRoomId = uuidv4();
     navigate(`/${newRoomId}`);
   };

@@ -1,9 +1,16 @@
 import { createContext, useContext, useState } from "react";
-import { IRoomData, IUserContextData, IUserData } from "../helper/interface";
+import {
+  IMessage,
+  IRoomData,
+  IUserContextData,
+  IUserData,
+} from "../helper/interface";
 
 const UserContext = createContext<IUserContextData>({
   allUsersData: {},
-  userData: { isMeetingOrganiser: false, name: "" },
+  userData: { isMeetingOrganiser: false, name: "", peerID: "", roomID: "" },
+  allMessages: [],
+  setAllMessages: () => {},
   setUserData: () => {},
   setAllUsersData: () => {},
 });
@@ -20,12 +27,22 @@ export const UserContextProvider = ({
   const [userData, setUserData] = useState<IUserData>({
     isMeetingOrganiser: false,
     name: "",
+    peerID: "",
+    roomID: "",
   });
   const [allUsersData, setAllUsersData] = useState<IRoomData>({});
+  const [allMessages, setAllMessages] = useState<IMessage[]>([]);
 
   return (
     <UserContext.Provider
-      value={{ allUsersData, userData, setUserData, setAllUsersData }}
+      value={{
+        allUsersData,
+        userData,
+        setUserData,
+        setAllUsersData,
+        allMessages,
+        setAllMessages,
+      }}
     >
       {children}
     </UserContext.Provider>

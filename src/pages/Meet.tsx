@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useMediaStream from "../hooks/useMediaStream";
 import { useSocketContext } from "../context/Socket";
 import usePeer from "../hooks/usePeer";
@@ -24,18 +24,11 @@ const Meet = () => {
   const { setAllUsersData } = useUserContext();
   const { setUserData, userData, allMessages, setAllMessages } =
     useUserContext();
+  const isUserDataUpdated = useRef(false);
 
   // for setting the first user to all streams
   useMemo(() => {
     if (!mediaStream || !peer || !currentPeerID || !socket) return;
-
-    // sending the user data to server
-    socket?.emit("addUserData", {
-      peerID: currentPeerID,
-      roomID: roomid,
-      isMeetingOrganiser: userData?.isMeetingOrganiser,
-      name: userData?.name,
-    });
 
     // adding the current stream
     setAllStreams((prev) => {
@@ -49,19 +42,31 @@ const Meet = () => {
         },
       };
     });
+  }, [mediaStream, peer, currentPeerID, setAllStreams, socket]);
+
+  // for sending the user data to server and local context
+  useMemo(() => {
+    if (
+      !socket ||
+      !currentPeerID ||
+      !roomid ||
+      !userData ||
+      isUserDataUpdated.current
+    )
+      return;
+
+    // sending the user data to server
+    socket?.emit("addUserData", {
+      peerID: currentPeerID,
+      roomID: roomid,
+      isMeetingOrganiser: userData?.isMeetingOrganiser,
+      name: userData?.name,
+    });
 
     // updating the user data
     setUserData({ ...userData, peerID: currentPeerID, roomID: roomid || "" });
-  }, [
-    mediaStream,
-    peer,
-    currentPeerID,
-    setAllStreams,
-    roomid,
-    socket,
-    userData,
-    setUserData,
-  ]);
+    isUserDataUpdated.current = true;
+  }, [currentPeerID, roomid, setUserData, socket, userData]);
 
   // for listening to new user
   useEffect(() => {
@@ -162,6 +167,7 @@ const Meet = () => {
             Object.values(allStreams).map((streamData) => {
               return (
                 <div
+                  key={streamData?.peerID}
                   className={`relative ${
                     Object.keys(allStreams).length === 1 ? "h-full" : "h-1/2"
                   }`}

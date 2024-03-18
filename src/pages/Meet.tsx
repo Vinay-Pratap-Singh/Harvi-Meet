@@ -155,7 +155,7 @@ const Meet = () => {
   return (
     <div className="relative flex flex-col gap-5 h-screen">
       <div
-        className={`flex items-center gap-5 h-full m-5 ${
+        className={`flex gap-5 h-full justify-between m-5 overflow-hidden ${
           showSidebar?.showMessages || showSidebar?.showUsers
             ? "justify-between"
             : "justify-center"
@@ -208,7 +208,7 @@ const Meet = () => {
           className={`${
             showSidebar?.showMessages === true ||
             showSidebar?.showUsers === true
-              ? "w-96 h-full"
+              ? "w-[28rem] h-full"
               : "hidden"
           }`}
         >

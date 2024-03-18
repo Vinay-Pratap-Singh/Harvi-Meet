@@ -23,6 +23,12 @@ const useMediaStream = () => {
       toast.error("Failed to get the stream");
       navigate("/");
     }
+
+    return () => {
+      if (mediaStream) {
+        (mediaStream as MediaStream).getTracks().map((track) => track.stop());
+      }
+    };
   }, [navigate, mediaStream]);
 
   return { mediaStream };

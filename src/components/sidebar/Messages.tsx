@@ -11,6 +11,7 @@ const Messages = () => {
     formState: { isSubmitting },
     handleSubmit,
     register,
+    resetField,
   } = useForm<IFormInput>({ defaultValues: { message: "" } });
   const { userData, allMessages } = useUserContext();
   const socket = useSocketContext();
@@ -24,31 +25,36 @@ const Messages = () => {
       senderName: userData?.name,
       message: data?.message,
     });
+    resetField("message");
   };
 
   return (
-    <div className="h-full flex flex-col gap-5 rounded-md shadow-md p-5">
+    <div className="h-full w-full flex flex-col gap-5 rounded-md shadow-md p-5">
       {/* for rendering all messages */}
-      <div className="h-full space-y-5">
+      <div className="h-full space-y-5 overflow-hidden">
         <h1 className="font-semibold text-center text-xl">
           All user's message
         </h1>
 
-        {allMessages.length === 0 ? (
-          <p>No messages ...</p>
-        ) : (
-          allMessages.map((message) => {
-            return (
-              <div
-                key={message?.message + message?.senderName}
-                className="flex flex-col gap-1"
-              >
-                <p className="text-xs font-medium">{message?.senderName}</p>
-                <p>{message?.message}</p>
-              </div>
-            );
-          })
-        )}
+        <div className=" overflow-y-scroll h-full space-y-5 customScrollbar pb-20">
+          {allMessages.length === 0 ? (
+            <p>No messages ...</p>
+          ) : (
+            allMessages.map((message) => {
+              return (
+                <div
+                  key={message?.message + message?.senderName}
+                  className="flex flex-col"
+                >
+                  <p className="text-xs font-medium bg-yellow-500 text-white rounded-md w-fit px-2">
+                    {message?.senderName}
+                  </p>
+                  <p>{message?.message}</p>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
 
       {/* to send the message */}

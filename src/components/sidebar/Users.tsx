@@ -4,7 +4,7 @@ const Users = () => {
   const { allUsersData } = useUserContext();
 
   return (
-    <ul className="h-full rounded-md shadow-md p-5 space-y-3">
+    <ul className="h-full w-full rounded-md shadow-md p-5 space-y-3 overflow-y-scroll customScrollbar pb-20">
       <li className="text-xl font-semibold flex items-center gap-5 justify-center">
         <img className="w-5 h-5" src="/assets/footer/users.svg" alt="users" />
         <p>List of all the joined users</p>

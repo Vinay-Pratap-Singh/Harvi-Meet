@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+r
+/* custom scrollbar */
+/* CSS */
+.customScrollbar {
+  height: 100%; /* Ensure the div takes full height */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.customScrollbar::-webkit-scrollbar {
+  width: 6px; /* Set the width of the scrollbar */
+}
+
+.customScrollbar::-webkit-scrollbar-track {
+  background: transparent; /* Set the color of the scrollbar track */
+}
+
+.customScrollbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Set the color of the scrollbar thumb */
+  border-radius: 3px; /* Set border radius for the thumb */
+}

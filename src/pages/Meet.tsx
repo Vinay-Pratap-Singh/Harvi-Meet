@@ -12,7 +12,7 @@ import { useUserContext } from "../context/User";
 import { IRoomData } from "../helper/interface";
 
 const Meet = () => {
-  const { mediaStream } = useMediaStream();
+  const { mediaStream, setMediaStream } = useMediaStream();
   const socket = useSocketContext();
   const { peer, currentPeerID } = usePeer();
   const { allStreams, setAllStreams } = useStreamContext();
@@ -172,15 +172,19 @@ const Meet = () => {
                     Object.keys(allStreams).length === 1 ? "h-full" : "h-1/2"
                   }`}
                 >
-                  <ReactPlayer
-                    key={streamData?.peerID}
-                    url={streamData?.stream}
-                    muted={streamData?.isMuted}
-                    playing={streamData?.isPlaying}
-                    stopOnUnmount
-                    width="100%"
-                    height="100%"
-                  />
+                  {streamData?.isPlaying ? (
+                    <ReactPlayer
+                      key={streamData?.peerID}
+                      url={streamData?.stream}
+                      muted={streamData?.isMuted}
+                      playing={streamData?.isPlaying}
+                      stopOnUnmount
+                      width="100%"
+                      height="100%"
+                    />
+                  ) : (
+                    <div className="h-full w-full">Video off hai</div>
+                  )}
 
                   {/* to show mic option */}
                   <div className="absolute right-5 top-5 flex items-center justify-center w-8 h-8 transition-all duration-200 ease-in-out bg-gray-200 rounded-full">
@@ -208,7 +212,7 @@ const Meet = () => {
           className={`${
             showSidebar?.showMessages === true ||
             showSidebar?.showUsers === true
-              ? "w-[28rem] h-full"
+              ? "w-96 h-full"
               : "hidden"
           }`}
         >
@@ -225,6 +229,9 @@ const Meet = () => {
         currentPeerID={currentPeerID}
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
+        peer={peer}
+        mediaStream={mediaStream}
+        setMediaStream={setMediaStream}
       />
     </div>
   );

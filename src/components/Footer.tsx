@@ -4,6 +4,7 @@ import EmojiPicker from "./EmojiPicker";
 import EndCall from "./EndCall";
 import Video from "./Video";
 import CopyRoomCode from "./CopyRoomCode";
+import Peer from "peerjs";
 
 interface IProps {
   currentPeerID: string;
@@ -17,9 +18,19 @@ interface IProps {
       showMessages: boolean;
     }>
   >;
+  peer: Peer | null;
+  mediaStream: MediaStream | null;
+  setMediaStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
 }
 
-const Footer = ({ currentPeerID, setShowSidebar, showSidebar }: IProps) => {
+const Footer = ({
+  currentPeerID,
+  setShowSidebar,
+  showSidebar,
+  peer,
+  mediaStream,
+  setMediaStream,
+}: IProps) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isDetailsBoxClosed, setIsDetailsBoxClosed] = useState(false);
 
@@ -72,8 +83,12 @@ const Footer = ({ currentPeerID, setShowSidebar, showSidebar }: IProps) => {
       <div className="relative flex items-center justify-center gap-10">
         <EmojiPicker />
         <Audio currentPeerID={currentPeerID} />
-        <Video />
-        <EndCall />
+        <Video currentPeerID={currentPeerID} />
+        <EndCall
+          peer={peer}
+          mediaStream={mediaStream}
+          setMediaStream={setMediaStream}
+        />
       </div>
 
       {/* for other buttons */}

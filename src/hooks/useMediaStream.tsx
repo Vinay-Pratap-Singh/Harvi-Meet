@@ -31,7 +31,7 @@ const useMediaStream = () => {
     };
   }, [navigate, mediaStream]);
 
-  return { mediaStream };
+  return { mediaStream, setMediaStream };
 };
 
 export default useMediaStream;

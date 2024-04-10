@@ -1,14 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useStreamContext } from "../context/Stream";
 import { useUserContext } from "../context/User";
+import Peer from "peerjs";
 
-const EndCall = () => {
+interface IProps {
+  peer: Peer | null;
+  mediaStream: MediaStream | null;
+  setMediaStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
+}
+
+const EndCall = ({ peer, mediaStream, setMediaStream }: IProps) => {
   const navigate = useNavigate();
   const { setAllStreams } = useStreamContext();
   const { setAllMessages, setAllUsersData, setUserData, userData } =
     useUserContext();
 
   const handleEndCall = () => {
+    (mediaStream as MediaStream).getTracks().map((track) => track.stop());
     setAllStreams({});
     setAllMessages([]);
     setAllUsersData({});
@@ -18,6 +26,8 @@ const EndCall = () => {
       peerID: "",
       roomID: "",
     });
+    setMediaStream(null);
+    peer && peer.destroy();
     navigate("/");
   };
 

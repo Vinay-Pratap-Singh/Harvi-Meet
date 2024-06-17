@@ -22,8 +22,13 @@ const Meet = () => {
   });
   const { roomid } = useParams();
   const { setAllUsersData } = useUserContext();
-  const { setUserData, userData, allMessages, setAllMessages } =
-    useUserContext();
+  const {
+    setUserData,
+    userData,
+    allMessages,
+    setAllMessages,
+    setPinnedUserIndex,
+  } = useUserContext();
   const isUserDataUpdated = useRef(false);
 
   // for setting the first user to all streams
@@ -42,7 +47,17 @@ const Meet = () => {
         },
       };
     });
-  }, [mediaStream, peer, currentPeerID, setAllStreams, socket]);
+
+    // for pinned video preview
+    setPinnedUserIndex(0);
+  }, [
+    mediaStream,
+    peer,
+    currentPeerID,
+    setAllStreams,
+    socket,
+    setPinnedUserIndex,
+  ]);
 
   // for sending the user data to server and local context
   useMemo(() => {
@@ -153,58 +168,62 @@ const Meet = () => {
   }, [mediaStream, peer, setAllStreams]);
 
   return (
-    <div className="relative flex flex-col gap-5 h-screen">
-      <div
-        className={`flex gap-5 h-full justify-between m-5 overflow-hidden ${
-          showSidebar?.showMessages || showSidebar?.showUsers
-            ? "justify-between"
-            : "justify-center"
-        }`}
-      >
+    <div className="relative flex flex-col gap-5 h-screen pt-5">
+      <div className="flex items-center justify-center w-full h-full gap-5">
         {/* for all the joined users video */}
-        <div className="h-full flex flex-wrap items-center justify-center gap-5 overflow-hidden">
-          {Object.values(allStreams).length > 0 &&
-            Object.values(allStreams).map((streamData) => {
-              return (
-                <div
-                  key={streamData?.peerID}
-                  className={`relative ${
-                    Object.keys(allStreams).length === 1 ? "h-full" : "h-1/2"
-                  }`}
-                >
-                  {streamData?.isPlaying ? (
-                    <ReactPlayer
-                      key={streamData?.peerID}
-                      url={streamData?.stream}
-                      muted={streamData?.isMuted}
-                      playing={streamData?.isPlaying}
-                      stopOnUnmount
-                      width="100%"
-                      height="100%"
-                    />
-                  ) : (
-                    <div className="h-full w-full">Video off hai</div>
-                  )}
+        <div className="h-full flex justify-between gap-5">
+          <ReactPlayer
+            key={Object.values(allStreams)[0]?.peerID}
+            url={Object.values(allStreams)[0]?.stream}
+            muted={Object.values(allStreams)[0]?.isMuted}
+            playing={Object.values(allStreams)[0]?.isPlaying}
+            stopOnUnmount
+            width="100%"
+            height="100%"
+          />
 
-                  {/* to show mic option */}
-                  <div className="absolute right-5 top-5 flex items-center justify-center w-8 h-8 transition-all duration-200 ease-in-out bg-gray-200 rounded-full">
-                    {!streamData.isMuted ? (
-                      <img
-                        className="w-4 h-4 "
-                        src="/assets/footer/mute.svg"
-                        alt="mute"
+          <div className="w-96 h-full rounded-md shadow-md p-5">
+            {Object.values(allStreams).length > 0 &&
+              Object.values(allStreams).map((streamData) => {
+                return (
+                  <div
+                    key={streamData?.peerID}
+                    className="relative w-full bg-red-500"
+                  >
+                    {streamData?.isPlaying ? (
+                      <ReactPlayer
+                        key={streamData?.peerID}
+                        url={streamData?.stream}
+                        muted={streamData?.isMuted}
+                        playing={streamData?.isPlaying}
+                        stopOnUnmount
+                        width="100%"
+                        height="100%"
                       />
                     ) : (
-                      <img
-                        className="w-4 h-4 "
-                        src="/assets/footer/unmute.svg"
-                        alt="unmute"
-                      />
+                      <div className="h-full w-full">Video off hai</div>
                     )}
+
+                    {/* to show mic option */}
+                    <div className="absolute right-5 top-5 flex items-center justify-center w-8 h-8 transition-all duration-200 ease-in-out bg-gray-200 rounded-full">
+                      {!streamData.isMuted ? (
+                        <img
+                          className="w-4 h-4 "
+                          src="/assets/footer/mute.svg"
+                          alt="mute"
+                        />
+                      ) : (
+                        <img
+                          className="w-4 h-4 "
+                          src="/assets/footer/unmute.svg"
+                          alt="unmute"
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
         </div>
 
         {/* for user details / messaging sidebar */}

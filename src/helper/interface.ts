@@ -53,4 +53,6 @@ export interface IUserContextData {
   setAllMessages: React.Dispatch<React.SetStateAction<IMessage[]>>;
   setUserData: React.Dispatch<React.SetStateAction<IUserData>>;
   setAllUsersData: React.Dispatch<React.SetStateAction<IRoomData>>;
+  pinnedUserIndex: number | null;
+  setPinnedUserIndex: React.Dispatch<React.SetStateAction<number | null>>;
 }

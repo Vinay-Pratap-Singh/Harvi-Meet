@@ -7,27 +7,31 @@ const useMediaStream = () => {
   const [mediaStream, setMediaStream] = useState<null | MediaStream>(null);
   const isMediaStream = useRef(false);
 
-  // getting the media stream
-  useEffect(() => {
-    if (isMediaStream.current) return;
+  const getMediaStream = async () => {
     try {
-      (async () => {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
-        });
-        setMediaStream(stream);
-        isMediaStream.current = true;
-      })();
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+        video: true,
+      });
+      setMediaStream(stream);
+      isMediaStream.current = true;
     } catch (error) {
+      console.log(error, "check error");
       toast.error("Failed to get the stream");
       navigate("/");
     }
+  };
+
+  // getting the media stream
+  useEffect(() => {
+    if (isMediaStream.current) return;
+    getMediaStream();
 
     return () => {
       if (mediaStream) {
-        (mediaStream as MediaStream).getTracks().map((track) => track.stop());
+        mediaStream.getTracks().forEach((track) => track.stop());
       }
+      setMediaStream(null);
     };
   }, [navigate, mediaStream]);
 

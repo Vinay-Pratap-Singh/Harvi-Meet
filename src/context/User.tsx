@@ -13,6 +13,8 @@ const UserContext = createContext<IUserContextData>({
   setAllMessages: () => {},
   setUserData: () => {},
   setAllUsersData: () => {},
+  pinnedUserIndex: null,
+  setPinnedUserIndex: () => {},
 });
 
 // custom hook to use user context
@@ -32,6 +34,7 @@ export const UserContextProvider = ({
   });
   const [allUsersData, setAllUsersData] = useState<IRoomData>({});
   const [allMessages, setAllMessages] = useState<IMessage[]>([]);
+  const [pinnedUserIndex, setPinnedUserIndex] = useState<number | null>(null);
 
   return (
     <UserContext.Provider
@@ -42,6 +45,8 @@ export const UserContextProvider = ({
         setAllUsersData,
         allMessages,
         setAllMessages,
+        pinnedUserIndex,
+        setPinnedUserIndex,
       }}
     >
       {children}
